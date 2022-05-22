@@ -16,8 +16,6 @@ $products_orders_Query->execute();
 $orders_Query = $conn->prepare('SELECT * FROM orders');
 $orders_Query->execute();
 
-$Aliexpress_order = $conn->prepare('SELECT * FROM orders_aliexpress_store');
-$Aliexpress_order->execute();
 
 ?>
 
