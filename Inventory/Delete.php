@@ -74,9 +74,13 @@ if(isset($_POST['delete_order'])){
     $stmt->bindParam(':orders', $orders);
 
     //Include Trigger to delete order from products_orders after delete on orders
+    //update: Trigger works on Local database, but not user access is denied on remote. Therefore PHP Logic is needed here
 
     if($stmt->execute()){
         echo '<script>alert("Order Deleted Successfully!"); window.location = "../index.php"; </script>';
+        $stmt2 = $conn->prepare("DELETE FROM products_orders WHERE orders=:orderID");
+        $stmt2->bindParam(':orderID', $orders);   
+        $stmt2->execute();
 
 
     }

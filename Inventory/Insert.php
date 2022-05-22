@@ -102,9 +102,28 @@ if(isset($_POST['insert_order'])){
     $stmt->bindParam(':quantity', $quantity);
 
     //Use Trigger in MySQL database to insert into orders after insert on products_orders
+    //update: Trigger works on Local, but not remote. Therefore PHP Logic is needed here
+
+
 
     if($stmt->execute()){
         echo '<script>alert("Order Made Successfully!"); window.location = "../index.php";</script>';
+        //PHP Logic: Best way to do it is a trigger, for now I'll do this
+        //Select the recently added order ID
+        $OrderID = $conn->prepare("SELECT max(orders) FROM products_orders");
+        $OrderID->execute();
+        $ID = $OrderID->fetch(PDO::FETCH_COLUMN);
+
+        //get random warehouse ID 
+        $stmt2 = $conn -> prepare('SELECT warehouseID FROM warehouse ORDER BY RAND() LIMIT 1');
+        $stmt2 -> execute();
+        $warehouse = $stmt2->fetchColumn();
+
+        $stmt3 = $conn->prepare("INSERT INTO orders (orderID, warehouse) VALUES (:orderID, :warehouse)");
+        $stmt3->bindParam(':orderID', $ID);
+        $stmt3->bindParam(':warehouse', $warehouse);
+        $stmt3->execute();
+
 
     }
     else{
