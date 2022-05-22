@@ -11,8 +11,7 @@ if(isset($_POST['change_warehouse'])){
     $stmt->bindParam(':warehouse', $warehouse);
 
     if($stmt->execute()){
-        echo '<script>alert("Warehouse Changed Successfully!")</script>';
-        header("Location:../index.php");
+        echo '<script>alert("Warehouse Changed Successfully!"); window.location = "../index.php";</script>';
 
     }
     else{

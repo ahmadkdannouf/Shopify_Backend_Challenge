@@ -17,8 +17,7 @@ if(isset($_POST['insert_warehouse'])){
     $stmt->bindParam(':zip_code', $zip_code);
 
     if($stmt->execute()){
-        echo '<script>alert("Warehouse Added Successfully!")</script>';
-        header("Location:../index.php");
+        echo '<script>alert("Warehouse Added Successfully!"); window.location = "../index.php";</script>';
 
     }
     else{
@@ -44,8 +43,7 @@ if(isset($_POST['insert_product'])){
     $stmt->bindParam(':color', $color);
     
     if($stmt->execute()){
-        echo '<script>alert("Product Added Successfully!")</script>';
-        header("Location:../index.php");
+        echo '<script>alert("Product Added Successfully!"); window.location = "../index.php";</script>';
 
     }
     else{
@@ -69,12 +67,54 @@ if(isset($_POST['insert_store'])){
     $stmt->bindParam(':name', $name);
     
     if($stmt->execute()){
-        echo '<script>alert("Store Added Successfully!")</script>';
-        header("Location:../index.php");
+        echo '<script>alert("Store Added Successfully!"); window.location = "../index.php";</script>';
 
     }
     else{
         echo '<script>alert("An error occured")</script>';
+    }
+        
+    }catch(PDOException $e){
+    echo "Connection failed: " . $e->getMessage();
+    }
+
+}
+
+if(isset($_POST['insert_order'])){  
+    try {
+    
+    $productID = $_POST['product'];
+    $quantity = $_POST['quantity'];
+
+    //Getting the price for the product ID that was selected
+    $price_for_quantity = $conn->prepare("SELECT price FROM products WHERE productID=:product");
+    $price_for_quantity->bindParam(":product", $productID);
+    $price_for_quantity->execute();
+    $p_f_q = $price_for_quantity->fetch(PDO::FETCH_COLUMN);
+    
+    //Muliplying the price with the quantity that the user selected
+    $_SESSION['total_price'] = $quantity * $p_f_q;
+    $total_price = $_SESSION['total_price'];
+        
+    $stmt = $conn->prepare("INSERT INTO products_orders (product, total_price, quantity) VALUES (:product, :total_price, :quantity)");
+    $stmt->bindParam(':product', $productID);
+    $stmt->bindParam(':total_price', $total_price);
+    $stmt->bindParam(':quantity', $quantity);
+
+    //Use Trigger in MySQL database to insert into orders after insert on products_orders
+
+    if($stmt->execute()){
+        echo '<script>alert("Order Made Successfully!"); window.location = "../index.php";</script>';
+
+    }
+    else{
+        echo $total_price;
+        echo '<BR>';
+        echo $p_f_q;
+        echo '<BR>';
+        echo $productID;
+        echo '<BR>';
+        echo $quantity;
     }
         
     }catch(PDOException $e){

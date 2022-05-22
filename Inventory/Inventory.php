@@ -32,7 +32,136 @@ $Aliexpress_order->execute();
 </head>
 <body>
 
+<style>
+    /* Set additional styling options for the columns */
+    .column {
+    float: left;
+    }
+
+    /* Set width length for the left, right and middle columns */
+    .left {
+    width: 50%;
+    }
+    .right {
+    width: 50%;
+    }
+
+    .row:after {
+    content: "";
+    display: table;
+    clear: both;
+    }
+    </style>
+
 <center>
+
+<h2>Inventory</h2>
+
+<div class="row">
+        <div class="column left">
+            <table class = "styled-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Product ID</th>
+                        <th>Total Price</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($products_orders_Query as $OP): ?>
+                    <tr>
+                        <td><?=$OP['orders']?></td>
+                        <td><?=$OP['product']?></td>
+                        <td><?=$OP['total_price']?></td>
+                        <td><?=$OP['quantity']?></td>
+                    </tr>
+                </tbody>
+                <?php endforeach; ?>
+                
+            </table>
+
+            <form action = "Inventory/Insert.php" method = "POST">
+                <label for="product">Product:</label>
+                <br>
+                <select id="product" name="product" type="product" class="form-control">
+                    <?php
+                    $ID_of_product = "SELECT productID FROM products";
+                    $sql = $conn->prepare($ID_of_product);
+                    $sql->execute();
+                    $ID = $sql->fetchAll(PDO::FETCH_COLUMN);
+                    ?>
+                    <option></option>
+                    <?php foreach($ID as $product):?>
+                        <option><?=$product?></option>
+                    <?php endforeach; ?>    
+                </select>
+                <br>
+                <label for="quantity">Quantity:</label><br>
+                <input type="number" id="quantity" name="quantity"><br>
+
+                <br>
+                <button type="submit" name="insert_order">Make Order</button>
+
+            </form>
+
+                        
+
+        </div>
+
+    <div class="column right">
+        <table class = "styled-table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Warehouse ID</th>
+                    <th>Update Warehouse ID</th>
+                    <th>Delete Order</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($orders_Query as $order): ?>
+                <tr>
+                    <td><?=$order['orderID']?></td>
+                    <td><?=$order['warehouse']?></td>
+                    <td>
+                    <form action = "Inventory/Update.php" method = "post">
+                        <?php echo '<input type="hidden" name="orderID" id = "orderID" value = "'.$order["orderID"].'" />' ?>
+                        <select id="warehouse" name="warehouse" type="warehouse" class="form-control">
+
+                            <?php
+                            $ID_of_warehouse = "SELECT warehouseID FROM warehouse";
+                            $sql = $conn->prepare($ID_of_warehouse);
+                            $sql->execute();
+                            $ID = $sql->fetchAll(PDO::FETCH_COLUMN);
+                            ?>
+                            <option></option>
+                            <?php foreach($ID as $warehouse):?>
+                                <option><?=$warehouse?></option>
+                            <?php endforeach; ?>    
+                        </select>
+                        <button class="w-100 btn btn-lg btn-dark" type="submit" name="change_warehouse">Save Change</button>
+                    </form>
+                    </td>
+                    <td>
+                        <form action = "Inventory/Delete.php" method = "POST">
+                            <?php echo '<input type="hidden" name="orderID" id = "orderID" value = "'.$order["orderID"].'" />' ?>
+                            <button type="submit" name="delete_order">Delete Order</button>
+                        </form>
+                    </td>
+
+
+                </tr>
+            </tbody>
+            <?php endforeach; ?>
+            
+        </table>
+    </div>
+
+</div>
+
+<h1>______________________________________________________________________________________________________</h1>
+
 <h2>Products</h2>
 
 <table class = "styled-table">
@@ -40,6 +169,7 @@ $Aliexpress_order->execute();
         <tr>
             <th>Product ID</th>
             <th>Product Name</th>
+            <th>Supplier ID</th>
             <th>Price</th>
             <th>Color</th>
             <th>Delete Product</th>
@@ -50,6 +180,7 @@ $Aliexpress_order->execute();
         <tr>
             <td><?=$product['productID']?></td>
             <td><?=$product['name']?></td>
+            <td><?=$product['store_number']?></td>
             <td><?=$product['price']?></td>
             <td><?=$product['color']?></td>
             <td>
@@ -175,89 +306,6 @@ $Aliexpress_order->execute();
     <button type="submit" name="insert_warehouse">Add Warehouse</button>
 
 </form>
-
-<h1>______________________________________________________________________________________________________</h1>
-
-<h2>Ordered Products</h2>
-
-<table class = "styled-table">
-    <thead>
-        <tr>
-            <th>Product ID</th>
-            <th>Order ID</th>
-            <th>Total Price</th>
-            <th>Quantity</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach($products_orders_Query as $OP): ?>
-        <tr>
-            <td><?=$OP['product']?></td>
-            <td><?=$OP['orders']?></td>
-            <td><?=$OP['total_price']?></td>
-            <td><?=$OP['quantity']?></td>
-        </tr>
-    </tbody>
-    <?php endforeach; ?>
-    
-</table>
-
-<table class = "styled-table">
-    <thead>
-        <tr>
-            <th>Order ID</th>
-            <th>Warehouse ID</th>
-            <th>Update Warehouse ID</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach($orders_Query as $order): ?>
-        <tr>
-            <td><?=$order['orderID']?></td>
-            <td><?=$order['warehouse']?></td>
-            <td>
-            <form action = "Inventory/Update.php" method = "post">
-                <?php echo '<input type="hidden" name="orderID" id = "orderID" value = "'.$order["orderID"].'" />' ?>
-                <select id="warehouse" name="warehouse" type="warehouse" class="form-control">
-
-                    <?php
-                    $ID_of_warehouse = "SELECT warehouseID FROM warehouse";
-                    $sql = $conn->prepare($ID_of_warehouse);
-                    $sql->execute();
-                    $ID = $sql->fetchAll(PDO::FETCH_COLUMN);
-                    ?>
-                    <option></option>
-                    <?php foreach($ID as $warehouse):?>
-                        <option><?=$warehouse?></option>
-                    <?php endforeach; ?>    
-                </select>
-                <button class="w-100 btn btn-lg btn-dark" type="submit" name="change_warehouse">Save Change</button>
-            </form>
-
-
-        </tr>
-    </tbody>
-    <?php endforeach; ?>
-    
-</table>
-
-<table class = "styled-table">
-    <thead>
-        <tr>
-            <th>Order ID</th>
-            <th>AliExpress Store Number</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach($Aliexpress_order as $AO): ?>
-        <tr>
-            <td><?=$AO['orders']?></td>
-            <td><?=$AO['aliExpress_store']?></td>
-        </tr>
-    </tbody>
-    <?php endforeach; ?>
-    
-</table>
 
 </center>
     
