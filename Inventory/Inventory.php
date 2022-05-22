@@ -42,6 +42,7 @@ $Aliexpress_order->execute();
             <th>Product Name</th>
             <th>Price</th>
             <th>Color</th>
+            <th>Delete Product</th>
         </tr>
     </thead>
     <?php foreach($productQuery as $product): ?>
@@ -51,10 +52,31 @@ $Aliexpress_order->execute();
             <td><?=$product['name']?></td>
             <td><?=$product['price']?></td>
             <td><?=$product['color']?></td>
+            <td>
+            <form action = "Inventory/Delete.php" method = "POST">
+                <?php echo '<input type="hidden" name="productID" id = "productID" value = "'.$product["productID"].'" />' ?>
+                <button type="submit" name="delete_product">Delete Product</button>
+            </form>
+            </td>
         </tr>
     </tbody>
     <?php endforeach; ?>
 </table>
+
+<form action = "Inventory/Insert.php" method = "POST">
+    <label for="name">Product Name:</label><br>
+    <input type="text" id="name" name="name"><br>
+
+    <label for="price">Price:</label><br>
+    <input type="text" id="price" name="price"><br>
+
+    <label for="color">Color:</label><br>
+    <input type="text" id="color" name="color"><br>
+
+    <br>
+    <button type="submit" name="insert_product">Add Product</button>
+
+</form>
 
 <h1>______________________________________________________________________________________________________</h1>
 
@@ -65,6 +87,7 @@ $Aliexpress_order->execute();
         <tr>
             <th>Store Number</th>
             <th>Store Name</th>
+            <th>Delete Store<th>
         </tr>
     </thead>
     <tbody>
@@ -72,10 +95,28 @@ $Aliexpress_order->execute();
         <tr>
             <td><?=$store['store_number']?></td>
             <td><?=$store['name']?></td>
+            <td>
+            <form action = "Inventory/Delete.php" method = "POST">
+                <?php echo '<input type="hidden" name="store_number" id = "store_number" value = "'.$store["store_number"].'" />' ?>
+                <button type="submit" name="delete_store">Delete Store</button>
+            </form>
+            </td>
         </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<form action = "Inventory/Insert.php" method = "POST">
+    <label for="store_number">Store Number:</label><br>
+    <input type="text" id="store_number" name="store_number"><br>
+
+    <label for="name">Store Name:</label><br>
+    <input type="text" id="name" name="name"><br>
+
+    <br>
+    <button type="submit" name="insert_store">Add Store</button>
+
+</form>
 
 <h1>______________________________________________________________________________________________________</h1>
 
@@ -104,8 +145,10 @@ $Aliexpress_order->execute();
             <td><?=$warehouse['state']?></td>
             <td><?=$warehouse['zip_code']?></td>
             <td>
+            <form action = "Inventory/Delete.php" method = "POST">
                 <?php echo '<input type="hidden" name="warehouseID" id = "warehouseID" value = "'.$warehouse["warehouseID"].'" />' ?>
                 <button type="submit" name="delete_warehouse">Delete Warehouse</button>
+            </form>
             </td>
         </tr>
     </tbody>
@@ -142,8 +185,8 @@ $Aliexpress_order->execute();
         <tr>
             <th>Product ID</th>
             <th>Order ID</th>
-            <th>Quantity</th>
             <th>Total Price</th>
+            <th>Quantity</th>
         </tr>
     </thead>
     <tbody>
