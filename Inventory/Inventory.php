@@ -96,8 +96,7 @@ $orders_Query->execute();
                 </select>
                 <br>
                 <label for="quantity">Quantity:</label><br>
-                <input type="number" id="quantity" name="quantity"><br>
-
+                <input type="number" id="quantity" name="quantity"><br>   
                 <br>
                 <button type="submit" name="insert_order">Make Order</button>
 
@@ -197,7 +196,7 @@ $orders_Query->execute();
     <input type="text" id="name" name="name"><br>
 
     <label for="price">Price:</label><br>
-    <input type="text" id="price" name="price"><br>
+    <input type="number" id="price" name="price"><br>
 
     <label for="color">Color:</label><br>
     <input type="text" id="color" name="color"><br>
