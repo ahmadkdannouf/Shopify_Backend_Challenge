@@ -6,5 +6,5 @@
 
 - Replit Link: https://replit.com/@dannoufak/SHOPIFY-CHALLENGE
 
-
+- Please extend screen on Replit to see everything clearly.
 
