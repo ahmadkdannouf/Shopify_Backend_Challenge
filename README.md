@@ -4,6 +4,6 @@
 
 - Developed using PHP. Data stored in phpMyAdmin database.
 
-- Database Design: https://drive.google.com/file/d/1uCZHDo8DZgLVZeW_YckCwuecIUClwitE/view?usp=sharing 
+
 
 
